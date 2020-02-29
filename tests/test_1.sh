@@ -13,12 +13,12 @@ source filePathHandling.source
 
 source fileHandling.source
 
-echo "INFO :: starting test $0 from ${testPwd}"
+echo "INFO :: starting test ${testName} from ${testPwd}"
 
 git config --global push.default matching
 
 rm -rf ${testWorkdirPath}
-mkdir ${testWorkdirPath}
+mkdir -p ${testWorkdirPath}
 
 remotePath=${testWorkdirPath}/${remoteName}
 
@@ -51,7 +51,6 @@ echo "INFO :: client0 adds a new file"
 filePathCreate src
 file0=$?
 msg=$(fileCreate $(filePathGet $file0) $(clientCurrentGetName))
-echo add and commit
 git add $(filePathGet $file0) && git commit -m "$msg"
 echo "INFO :: client0 pushes"
 git push origin master
