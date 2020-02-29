@@ -1,7 +1,8 @@
 #!/bin/bash
 
 testPwd=$(pwd)
-testName=test_1
+a=$(basename -- $0)
+testName=${a%.*}
 
 remoteName=remote
 export testWorkdirPath=${testPwd}/${testName}_workdir

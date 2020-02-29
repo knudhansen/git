@@ -1,7 +1,11 @@
+function fileLine {
+    actor=$1
+    msg=$2
+    echo "$(date '+%Y/%m/%d') : ${actor} : $msg"
+}
 function fileCreate {
     filePath=$1
     author=$2
-    echo "$author creates file $filePath" >&2
     # verify that the file does not already exist
     if test -f $filePath; then
 	echo "ERROR >> trying to create file $filePath which already exists. fileCreate was aborted." >&2
@@ -9,7 +13,7 @@ function fileCreate {
     fi
     # create dir and file
     mkdir -p $(dirname $filePath)
-    echo file created by ${author} at $(date) | tee ${filePath}
+    fileLine ${author} "file created" | tee ${filePath}
 }
 function fileModify {
     filePath=$1
@@ -19,5 +23,5 @@ function fileModify {
 	echo "ERROR >> trying to modify file $filePath which does not exists. fileModify was aborted." >&2
 	return 0
     fi
-    echo file modified by ${editor} at $(date) | tee -a ${filePath}
+    fileLine ${editor} "file modified" | tee -a ${filePath}
 }
