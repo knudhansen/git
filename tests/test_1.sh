@@ -7,86 +7,10 @@ remoteName=remote
 export testWorkdirPath=${testPwd}/${testName}_workdir
 declare -a fileCounters
 
-#client variables
-export clientCounter=0
-export currentClientNumber=0
-# client functions
-function clientGetName {
-    clientNumber=$1
-    echo client${clientNumber}
-}
-function clientGetPath {
-    clientNumber=$1
-    echo ${testWorkdirPath}/$(clientGetName $clientNumber)
-}
-function clientCurrentGetName {
-    echo $(clientGetName ${currentClientNumber})
-}
-function clientCurrentGetPath {
-    echo $(clientGetPath ${currentClientNumber})
-}
-function clientCreate {
-    clientNumber=$clientCounter
-    echo "DEBUG :: clientCounter before: $clientCounter" >&2
-    export clientCounter=$((clientCounter+1))
-    echo "DEBUG :: clientCounter after: $clientCounter" >&2
-    fileCounters+=( 0 )
-    mkdir -p $(clientGetPath $clientNumber) 
-    return $clientNumber
-}
-function clientSwitch {
-    currentClientNumber=$1
-    cd $(clientCurrentGetPath)
-}
-function clientFileDiff {
-    relativeFilePath=$1
-    clientNumberA=$2
-    clientNumberB=$3
-    absoluteFilePathClientA="$(clientGetPath $clientNumberA)/$relativeFilePath"
-    absoluteFilePathClientB="$(clientGetPath $clientNumberB)/$relativeFilePath"
-    diff -r $absoluteFilePathClientA $absoluteFilePathClientB
-    return $?
-}
+source clientHandling.source
+source filePathHandling.source
 
-# filePath variables
-declare -a filePathList
-# filePath functions
-function filePathGet {
-    fileNumber=$1
-    echo ${filePathList[$fileNumber]}
-}
-function filePathCreate {
-    fileDir=${1:-'.'}
-    fileNumber=${#fileList[@]}
-    filePath=${fileDir}/file${fileNumber}.txt
-    filePathList+=( $filePath )
-    return $FileNumber
-}
-
-
-function fileCreate {
-    filePath=$1
-    author=$(clientCurrentGetName)
-    echo "$author creates file $filePath" >&2
-    # verify that the file does not already exist
-    if test -f $filePath; then
-	echo "ERROR >> trying to create file $filePath which already exists. fileCreate was aborted." >&2
-	return 0
-    fi
-    # create dir and file
-    mkdir -p $(dirname $filePath)
-    echo file created by ${author} at $(date) | tee ${filePath}
-}
-function fileModify {
-    filePath=$1
-    editor=$(clientCurrentGetName)
-    # verify that the file exists
-    if test -f filePath; then
-	echo "ERROR >> trying to modify file $filePath which does not exists. fileModify was aborted." >&2
-	return 0
-    fi
-    echo file modified by ${editor} at $(date) | tee -a ${filePath}
-}
+source fileHandling.source
 
 echo "INFO :: starting test $0 from ${testPwd}"
 
@@ -125,7 +49,7 @@ git clone -l ${remotePath} $(clientCurrentGetPath)
 echo "INFO :: client0 adds a new file"
 filePathCreate src
 file0=$?
-msg=$(fileCreate $(filePathGet $file0))
+msg=$(fileCreate $(filePathGet $file0) $(clientCurrentGetName))
 echo add and commit
 git add $(filePathGet $file0) && git commit -m "$msg"
 echo "INFO :: client0 pushes"
@@ -146,7 +70,7 @@ fi
 # modify the file created by the first client
 # -------------------------------------------
 echo "INFO :: client1 modifies the file"
-msg=$(fileModify $(filePathGet $file0))
+msg=$(fileModify $(filePathGet $file0) $(clientCurrentGetName))
 git add $(filePathGet $file0) && git commit -m "$msg"
 echo "INFO :: client1 pushes"
 git push

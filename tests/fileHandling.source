@@ -1,0 +1,23 @@
+function fileCreate {
+    filePath=$1
+    author=$2
+    echo "$author creates file $filePath" >&2
+    # verify that the file does not already exist
+    if test -f $filePath; then
+	echo "ERROR >> trying to create file $filePath which already exists. fileCreate was aborted." >&2
+	return 0
+    fi
+    # create dir and file
+    mkdir -p $(dirname $filePath)
+    echo file created by ${author} at $(date) | tee ${filePath}
+}
+function fileModify {
+    filePath=$1
+    editor=$2
+    # verify that the file exists
+    if test -f filePath; then
+	echo "ERROR >> trying to modify file $filePath which does not exists. fileModify was aborted." >&2
+	return 0
+    fi
+    echo file modified by ${editor} at $(date) | tee -a ${filePath}
+}
