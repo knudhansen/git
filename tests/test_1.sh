@@ -15,7 +15,7 @@ source fileHandling.source
 
 echo "INFO :: starting test ${testName} from ${testPwd}"
 
-git config --global push.default matching
+git config push.default matching
 
 rm -rf ${testWorkdirPath}
 mkdir -p ${testWorkdirPath}

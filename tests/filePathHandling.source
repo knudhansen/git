@@ -7,8 +7,8 @@ function filePathGet {
 }
 function filePathCreate {
     fileDir=${1:-'.'}
-    fileNumber=${#fileList[@]}
+    fileNumber=${#filePathList[@]}
     filePath=${fileDir}/file${fileNumber}.txt
     filePathList+=( $filePath )
-    return $FileNumber
+    return $fileNumber
 }
