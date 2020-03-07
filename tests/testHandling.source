@@ -2,7 +2,7 @@ testPwd=$(pwd)
 a=$(basename -- $0)
 testName=${a%.*}
 
-export testWorkdirPath=${testPwd}/${testName}_workdir
+export testWorkdirPath=${testPwd}/workdir_${testName}
 declare -a fileCounters
 
 source clientHandling.source
