@@ -4,7 +4,7 @@ function fileLine {
     fileLinesPath=${testWorkdirPath}/fileLines.txt
     touch ${fileLinesPath}
     changeCount=$(wc -l ${fileLinesPath} | awk '{print $1}')
-    printf "%s-%06d : %s : " $(date '+%Y/%m/%d') ${changeCount} ${actor} | tee -a ${fileLinesPath}
+    printf "%06d : %s : " ${changeCount} ${actor} | tee -a ${fileLinesPath}
     echo $msg | tee -a ${fileLinesPath}
 }
 function fileCreate {
