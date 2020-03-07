@@ -1,10 +1,11 @@
 function fileLine {
     actor=$1
     msg=$2
-    touch ${testWorkdirPath}/fileLines.txt
-    changeCount=$(wc -l ${testPwd}/fileLines.txt | awk '{print $1}')
-    printf "%s-%06d : %s : " $(date '+%Y/%m/%d') ${changeCount} ${actor} | tee -a ${testPwd}/fileLines.txt
-    echo $msg | tee -a ${testPwd}/fileLines.txt
+    fileLinesPath=${testWorkdirPath}/fileLines.txt
+    touch ${fileLinesPath}
+    changeCount=$(wc -l ${fileLinesPath} | awk '{print $1}')
+    printf "%s-%06d : %s : " $(date '+%Y/%m/%d') ${changeCount} ${actor} | tee -a ${fileLinesPath}
+    echo $msg | tee -a ${fileLinesPath}
 }
 function fileCreate {
     filePath=$1
