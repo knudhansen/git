@@ -1,0 +1,15 @@
+testPwd=$(pwd)
+a=$(basename -- $0)
+testName=${a%.*}
+
+export testWorkdirPath=${testPwd}/${testName}_workdir
+declare -a fileCounters
+
+source clientHandling.source
+source filePathHandling.source
+source fileHandling.source
+
+echo "INFO :: starting test $0 from ${testPwd}"
+
+rm -rf ${testWorkdirPath}
+mkdir ${testWorkdirPath}

@@ -1,25 +1,11 @@
 #!/bin/bash
 
-testPwd=$(pwd)
-a=$(basename -- $0)
-testName=${a%.*}
-
-remoteName=remote
-export testWorkdirPath=${testPwd}/${testName}_workdir
-declare -a fileCounters
-
-source clientHandling.source
-source filePathHandling.source
-
-source fileHandling.source
-
-echo "INFO :: starting test ${testName} from ${testPwd}"
-
 git config push.default matching
 
 rm -rf ${testWorkdirPath}
 mkdir -p ${testWorkdirPath}
 
+remoteName=remote
 remotePath=${testWorkdirPath}/${remoteName}
 
 # setup a remote
