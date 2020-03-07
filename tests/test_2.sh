@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source testHandling.source
+
 git config --global push.default matching
 
 rm -rf ${testWorkdirPath}
