@@ -47,7 +47,7 @@ msg=$(fileModify $(filePathGet $file0) $(clientCurrentGetName))
 echo add and commit
 git add $(filePathGet $file0) && git commit -m "$msg"
 echo "INFO :: client 0 pushes"
-git push origin client0
+git push origin $(clientCurrentGetName)
 msg=$(fileModify $(filePathGet $file0) $(clientCurrentGetName))
 echo add and commit
 git add $(filePathGet $file0) && git commit -m "$msg"

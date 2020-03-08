@@ -4,9 +4,6 @@ source testHandling.source
 
 git config push.default matching
 
-rm -rf ${testWorkdirPath}
-mkdir -p ${testWorkdirPath}
-
 remoteName=remote
 remotePath=${testWorkdirPath}/${remoteName}
 
