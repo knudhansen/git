@@ -34,12 +34,14 @@ echo created client $client0. File counter for the client is ${fileCounters[$cli
 clientCreate
 client1=$?
 echo created client $client1. File counter for the client is ${fileCounters[$client1]}.
+clientCreate
+client2=$?
+echo created client $client2. File counter for the client is ${fileCounters[$client2]}.
 
 # setup client0 cloning remote
 # ----------------------------
 echo "INFO :: client0 clones remote (empty)"
 clientSwitch $client0
-echo "DEBUG :: $(clientCurrentGetPath)"
 git clone -l $(getRemotePath ${mainRepoRemoteName}) $(clientCurrentGetPath)
 filePathCreate src
 file0=$?
@@ -53,7 +55,6 @@ git push origin master
 # ---------------------------------------
 echo "INFO :: client1 clones submodule remote (empty)"
 clientSwitch $client1
-echo "DEBUG :: $(clientCurrentGetPath)"
 git clone -l $(getRemotePath ${submodule0RemoteName}) $(clientCurrentGetPath)
 filePathCreate src
 file1=$?
@@ -68,3 +69,19 @@ git push origin master
 echo "INFO :: client0 adds a submodule"
 clientSwitch $client0
 git submodule add $(getRemotePath ${submodule0RemoteName}) ./sm/sm0
+git commit -m "adding submodule 0" && git push origin master
+filePathCreate src
+file2=$?
+(cd sm/sm0 && msg=$(fileCreate $(filePathGet $file2) $(clientCurrentGetName)))
+git status
+(cd sm/sm0 && git status)
+echo $(filePathGet $file2)
+(cd sm/sm0 && git add $(filePathGet $file2) && git commit -m "$msg" && git push origin master)
+git add sm/sm0 && git commit -m "updating submodule $msg" && git push origin master
+
+# setup client2 cloning remote
+# ----------------------------
+echo "INFO :: client2 clones remote"
+clientSwitch $client2
+git clone -l $(getRemotePath ${mainRepoRemoteName}) $(clientCurrentGetPath)
+git submodule update --init
