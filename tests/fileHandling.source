@@ -1,6 +1,7 @@
 function fileLine {
-    actor=$1
-    msg=$2
+    local actor=$1
+    local msg=$2
+
     fileLinesPath=${testWorkdirPath}/fileLines.txt
     touch ${fileLinesPath}
     changeCount=$(wc -l ${fileLinesPath} | awk '{print $1}')
@@ -9,8 +10,8 @@ function fileLine {
 }
 
 function fileCreate {
-    filePath=$1
-    author=$2
+    local filePath=$1
+    local author=$2
     # verify that the file does not already exist
     if test -f $filePath; then
 	echo "ERROR >> trying to create file $filePath which already exists. fileCreate was aborted." >&2
@@ -22,8 +23,9 @@ function fileCreate {
 }
 
 function fileModify {
-    filePath=$1
-    editor=$2
+    local filePath=$1
+    local editor=$2
+
     # verify that the file exists
     if test -f filePath; then
 	echo "ERROR >> trying to modify file $filePath which does not exists. fileModify was aborted." >&2
