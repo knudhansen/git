@@ -1,10 +1,14 @@
 # filePath variables
+
 declare -a filePathList
+
 # filePath functions
+
 function filePathGet {
     fileNumber=$1
     echo ${filePathList[$fileNumber]}
 }
+
 function filePathCreate {
     fileDir=${1:-'.'}
     fileNumber=${#filePathList[@]}

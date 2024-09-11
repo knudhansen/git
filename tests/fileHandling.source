@@ -7,6 +7,7 @@ function fileLine {
     printf "%06d : %s : " ${changeCount} ${actor} | tee -a ${fileLinesPath}
     echo $msg | tee -a ${fileLinesPath}
 }
+
 function fileCreate {
     filePath=$1
     author=$2
@@ -17,8 +18,9 @@ function fileCreate {
     fi
     # create dir and file
     mkdir -p $(dirname $filePath)
-    fileLine ${author} "file created" | tee ${filePath}
+    fileLine ${author} "file created $filePath" | tee ${filePath}
 }
+
 function fileModify {
     filePath=$1
     editor=$2
@@ -27,5 +29,5 @@ function fileModify {
 	echo "ERROR >> trying to modify file $filePath which does not exists. fileModify was aborted." >&2
 	return 0
     fi
-    fileLine ${editor} "file modified" | tee -a ${filePath}
+    fileLine ${editor} "file modified $filePath" | tee -a ${filePath}
 }

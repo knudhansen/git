@@ -1,40 +1,49 @@
 #client variables
 export clientCounter=0
 export currentClientNumber=0
+
 # client functions
+
 function clientGetName {
-    clientNumber=$1
+    local clientNumber=$1
     echo client${clientNumber}
 }
+
 function clientGetPath {
-    clientNumber=$1
+    local clientNumber=$1
     echo ${testWorkdirPath}/$(clientGetName $clientNumber)
 }
+
 function clientCurrentGetName {
     echo $(clientGetName ${currentClientNumber})
 }
+
 function clientCurrentGetPath {
     echo $(clientGetPath ${currentClientNumber})
 }
+
 function clientCreate {
-    clientNumber=$clientCounter
-    echo "DEBUG :: clientCounter before: $clientCounter" >&2
+    local clientNumber=$clientCounter
+
     export clientCounter=$((clientCounter+1))
-    echo "DEBUG :: clientCounter after: $clientCounter" >&2
     fileCounters+=( 0 )
     mkdir -p $(clientGetPath $clientNumber) 
     return $clientNumber
 }
+
 function clientSwitch {
-    currentClientNumber=$1
+    local clientNumber=$1
+
+    currentClientNumber=$clientNumber
     cd $(clientCurrentGetPath)
 }
+
 function clientFileDiff {
-    relativeFilePath=$1
-    clientNumberA=$2
-    clientNumberB=$3
-    absoluteFilePathClientA="$(clientGetPath $clientNumberA)/$relativeFilePath"
-    absoluteFilePathClientB="$(clientGetPath $clientNumberB)/$relativeFilePath"
+    local relativeFilePath=$1
+    local clientNumberA=$2
+    local clientNumberB=$3
+    local absoluteFilePathClientA="$(clientGetPath $clientNumberA)/$relativeFilePath"
+    local absoluteFilePathClientB="$(clientGetPath $clientNumberB)/$relativeFilePath"
     diff -r $absoluteFilePathClientA $absoluteFilePathClientB
     return $?
 }
