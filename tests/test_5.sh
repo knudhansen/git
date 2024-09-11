@@ -72,11 +72,12 @@ git submodule add $(getRemotePath ${submodule0RemoteName}) ./sm/sm0
 git commit -m "adding submodule 0" && git push origin master
 filePathCreate src
 file2=$?
-(cd sm/sm0 && msg=$(fileCreate $(filePathGet $file2) $(clientCurrentGetName)))
-git status
-(cd sm/sm0 && git status)
-echo $(filePathGet $file2)
-(cd sm/sm0 && git add $(filePathGet $file2) && git commit -m "$msg" && git push origin master)
+cd sm/sm0
+  msg=$(fileCreate $(filePathGet $file2) $(clientCurrentGetName))
+  git add $(filePathGet $file2)
+  git commit -m "$msg"
+  git push origin master
+cd -
 git add sm/sm0 && git commit -m "updating submodule $msg" && git push origin master
 
 # setup client2 cloning remote
@@ -85,3 +86,12 @@ echo "INFO :: client2 clones remote"
 clientSwitch $client2
 git clone -l $(getRemotePath ${mainRepoRemoteName}) $(clientCurrentGetPath)
 git submodule update --init
+cd sm/sm0
+  git checkout master # need to checkout the master branch of sm before updating it
+  msg=$(fileModify $(filePathGet $file2) $(clientCurrentGetName))
+  git add $(filePathGet $file2)
+  git commit -m "$msg"
+  git push origin master
+cd -
+
+# TODO: go back to client0 and pull in submodule update from client2
