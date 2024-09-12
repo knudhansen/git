@@ -8,7 +8,7 @@ mainRepoRemoteName=main_repo_remote
 submodule0RemoteName=submodule_0_remote
 submodule1RemoteName=submodule_1_remote
 
-function getRemotePath {
+function getRemoteUrl {
     local name=$1
     
     echo ${testWorkdirPath}/${name}
@@ -18,7 +18,7 @@ function getRemotePath {
 # -------------
 echo "INFO :: setup remotes"
 for repoName in $mainRepoRemoteName $submodule0RemoteName $submodule1RemoteName; do
-    repoPath=$(getRemotePath $repoName)
+    repoPath=$(getRemoteUrl $repoName)
     echo "INFO :: setting remote $repoPath"
     mkdir -p ${repoPath}
     cd ${repoPath}
@@ -42,7 +42,7 @@ echo created client $client2. File counter for the client is ${fileCounters[$cli
 # ----------------------------
 echo "INFO :: client0 clones remote (empty)"
 clientSwitch $client0
-git clone -l $(getRemotePath ${mainRepoRemoteName}) $(clientCurrentGetPath)
+git clone -l $(getRemoteUrl ${mainRepoRemoteName}) $(clientCurrentGetPath)
 filePathCreate src
 file0=$?
 msg=$(fileCreate $(filePathGet $file0) $(clientCurrentGetName))
@@ -55,7 +55,7 @@ git push origin master
 # ---------------------------------------
 echo "INFO :: client1 clones submodule remote (empty)"
 clientSwitch $client1
-git clone -l $(getRemotePath ${submodule0RemoteName}) $(clientCurrentGetPath)
+git clone -l $(getRemoteUrl ${submodule0RemoteName}) $(clientCurrentGetPath)
 filePathCreate src
 file1=$?
 msg=$(fileCreate $(filePathGet $file1) $(clientCurrentGetName))
@@ -68,7 +68,7 @@ git push origin master
 # ---------------------------
 echo "INFO :: client0 adds a submodule"
 clientSwitch $client0
-git submodule add $(getRemotePath ${submodule0RemoteName}) ./sm/sm0
+git submodule add $(getRemoteUrl ${submodule0RemoteName}) ./sm/sm0
 git commit -m "adding submodule 0" && git push origin master
 filePathCreate src
 file2=$?
@@ -78,13 +78,15 @@ cd sm/sm0
   git commit -m "$msg"
   git push origin master
 cd -
-git add sm/sm0 && git commit -m "updating submodule $msg" && git push origin master
+git add sm/sm0
+git commit -m "updating submodule $msg"
+git push origin master
 
 # setup client2 cloning remote
 # ----------------------------
 echo "INFO :: client2 clones remote"
 clientSwitch $client2
-git clone -l $(getRemotePath ${mainRepoRemoteName}) $(clientCurrentGetPath)
+git clone -l $(getRemoteUrl ${mainRepoRemoteName}) $(clientCurrentGetPath)
 git submodule update --init
 cd sm/sm0
   git checkout master # need to checkout the master branch of sm before updating it
@@ -94,4 +96,11 @@ cd sm/sm0
   git push origin master
 cd -
 
-# TODO: go back to client0 and pull in submodule update from client2
+# switch back to client 0 and update submodule
+# --------------------------------------------
+echo "INFO :: client 0 gets submodule updated"
+clientSwitch $client0
+(cd sm/sm0 && git pull)
+git add sm/sm0
+git commit -m "updating submodule"
+git push origin master
