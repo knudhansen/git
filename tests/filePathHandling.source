@@ -5,14 +5,17 @@ declare -a filePathList
 # filePath functions
 
 function filePathGet {
-    fileNumber=$1
+    local fileNumber=$1
+
     echo ${filePathList[$fileNumber]}
 }
 
 function filePathCreate {
-    fileDir=${1:-'.'}
-    fileNumber=${#filePathList[@]}
-    filePath=${fileDir}/file${fileNumber}.txt
+    local fileDir=${1:-'.'}
+
+    local fileNumber=${#filePathList[@]}
+    local filePath=${fileDir}/file${fileNumber}.txt
     filePathList+=( $filePath )
+
     return $fileNumber
 }

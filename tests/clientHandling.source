@@ -6,11 +6,13 @@ export currentClientNumber=0
 
 function clientGetName {
     local clientNumber=$1
+
     echo client${clientNumber}
 }
 
 function clientGetPath {
     local clientNumber=$1
+
     echo ${testWorkdirPath}/$(clientGetName $clientNumber)
 }
 
@@ -42,8 +44,11 @@ function clientFileDiff {
     local relativeFilePath=$1
     local clientNumberA=$2
     local clientNumberB=$3
+
     local absoluteFilePathClientA="$(clientGetPath $clientNumberA)/$relativeFilePath"
     local absoluteFilePathClientB="$(clientGetPath $clientNumberB)/$relativeFilePath"
+
     diff -r $absoluteFilePathClientA $absoluteFilePathClientB
+
     return $?
 }

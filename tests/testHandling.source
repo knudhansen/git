@@ -2,6 +2,7 @@ testPwd=$(pwd)
 a=$(basename -- $0)
 testName=${a%.*}
 
+# define test work dir
 export testWorkdirPath=${testPwd}/workdir_${testName}
 declare -a fileCounters
 

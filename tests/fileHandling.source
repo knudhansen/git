@@ -4,7 +4,7 @@ function fileLine {
 
     fileLinesPath=${testWorkdirPath}/fileLines.txt
     touch ${fileLinesPath}
-    changeCount=$(wc -l ${fileLinesPath} | awk '{print $1}')
+    local changeCount=$(wc -l ${fileLinesPath} | awk '{print $1}')
     printf "%06d : %s : " ${changeCount} ${actor} | tee -a ${fileLinesPath}
     echo $msg | tee -a ${fileLinesPath}
 }
@@ -15,7 +15,7 @@ function fileCreate {
     # verify that the file does not already exist
     if test -f $filePath; then
 	echo "ERROR >> trying to create file $filePath which already exists. fileCreate was aborted." >&2
-	return 0
+	return 1
     fi
     # create dir and file
     mkdir -p $(dirname $filePath)
@@ -29,7 +29,7 @@ function fileModify {
     # verify that the file exists
     if test -f filePath; then
 	echo "ERROR >> trying to modify file $filePath which does not exists. fileModify was aborted." >&2
-	return 0
+	return 1
     fi
     fileLine ${editor} "file modified $filePath" | tee -a ${filePath}
 }
